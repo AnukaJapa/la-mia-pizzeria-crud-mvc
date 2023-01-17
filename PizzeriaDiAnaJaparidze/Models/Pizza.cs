@@ -19,15 +19,11 @@ namespace PizzeriaDiAnaJaparidze.Models
         [Url(ErrorMessage ="non hai inserito il link")]
         [Image]
         public string Image { get; set; }
-        
 
-        public Pizza() { }
-        public Pizza(string description, string title, string image)
-        {
-            Description = description;
-            Title = title;
-            Image = image;
-        }
+        public int CategoryId { get; set; }
+        public Category? Category { get; set; }
+
         
+        public Pizza() { }
     }
 }

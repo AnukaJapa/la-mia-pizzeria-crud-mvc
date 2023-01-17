@@ -36,22 +36,33 @@ namespace PizzeriaDiAnaJaparidze.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            using(PizzeriaContext db = new PizzeriaContext())
+            {
+                List<Category> categoriesFromDB = db.Categories.ToList<Category>();
+                PizzaCategoriesView modelForView = new PizzaCategoriesView();
+                modelForView.Pizza = new Pizza();
+                modelForView.Categories = categoriesFromDB;
+                return View("Create", modelForView);
+
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Pizza formData)
+        public IActionResult Create(PizzaCategoriesView formData)
         {
             using (PizzeriaContext db = new PizzeriaContext())
             {
                 if (!ModelState.IsValid)
                 {
+                    List<Category> categories = db.Categories.ToList<Category>();
+                    formData.Categories = categories;
                     return View("Create", formData);
 
-                } else
+                }
+                else
                 {
-                    db.Pizzas.Add(formData);
+                    db.Pizzas.Add(formData.Pizza);
                     db.SaveChanges();
                 }
 
@@ -75,28 +86,41 @@ namespace PizzeriaDiAnaJaparidze.Controllers
                     return NotFound("la pizza non è stato trovato");
                 }
 
-                return View("Update", pizzaToUpdate);
+                List<Category> categories = db.Categories.ToList<Category>();
+                PizzaCategoriesView modelForView = new PizzaCategoriesView();
+                modelForView.Pizza = pizzaToUpdate;
+                modelForView.Categories = categories;
+ 
+                return View("Update", modelForView);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Update(Pizza formPizza)
+        public IActionResult Update(int id, PizzaCategoriesView formPizza)
         {
             if (!ModelState.IsValid)
             {
+                using(PizzeriaContext db= new PizzeriaContext())
+                {
+                    List<Category> categories = db.Categories.ToList<Category>();
+                    formPizza.Categories = categories;
+                }
                 return View("Update", formPizza);
             }
             using (PizzeriaContext db = new PizzeriaContext())
             {
-                Pizza pizzaToUpdate = db.Pizzas.Where(p=>p.Id == formPizza.Id).FirstOrDefault();
+                Pizza pizzaToUpdate = db.Pizzas.Where(p=>p.Id == id).FirstOrDefault();
 
                 if (pizzaToUpdate != null)
                 {
-                    pizzaToUpdate.Title = formPizza.Title;
-                    pizzaToUpdate.Description = formPizza.Description;
-                    pizzaToUpdate.Image = formPizza.Image;
+                    pizzaToUpdate.Title = formPizza.Pizza.Title;
+                    pizzaToUpdate.Description = formPizza.Pizza.Description;
+                    pizzaToUpdate.Image = formPizza.Pizza.Image;
+                    pizzaToUpdate.CategoryId = formPizza.Pizza.CategoryId;
+
+
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
