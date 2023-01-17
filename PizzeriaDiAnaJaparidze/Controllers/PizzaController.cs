@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.SqlServer.Server;
 using PizzeriaDiAnaJaparidze.Database;
@@ -21,10 +22,14 @@ namespace PizzeriaDiAnaJaparidze.Controllers
         public IActionResult Details(int id)
         {
            using (PizzeriaContext db = new PizzeriaContext()){
-                Pizza pizzaRichiesta = db.Pizzas.Where(p => p.Id == id).FirstOrDefault();
-                if (pizzaRichiesta != null)
+               
+                Pizza pizzaTrovata = db.Pizzas
+                   .Where(p => p.Id == id).Include(pizza => pizza.Category)
+                   .FirstOrDefault();
+
+                if (pizzaTrovata != null)
                 {
-                    return View(pizzaRichiesta);
+                    return View(pizzaTrovata);
                 }
 
                 return NotFound("la pizza con l'id cercato non esiste!");

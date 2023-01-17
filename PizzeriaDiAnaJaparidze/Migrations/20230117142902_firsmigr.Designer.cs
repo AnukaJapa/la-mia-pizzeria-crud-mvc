@@ -11,8 +11,8 @@ using PizzeriaDiAnaJaparidze.Database;
 namespace PizzeriaDiAnaJaparidze.Migrations
 {
     [DbContext(typeof(PizzeriaContext))]
-    [Migration("20230112133400_aggiuntoDatiTable")]
-    partial class aggiuntoDatiTable
+    [Migration("20230117142902_firsmigr")]
+    partial class firsmigr
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,23 @@ namespace PizzeriaDiAnaJaparidze.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("PizzeriaDiAnaJaparidze.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("PizzeriaDiAnaJaparidze.Models.Pizza", b =>
                 {
                     b.Property<int>("Id")
@@ -32,9 +49,13 @@ namespace PizzeriaDiAnaJaparidze.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Image")
                         .IsRequired()
@@ -42,11 +63,30 @@ namespace PizzeriaDiAnaJaparidze.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("varchar(100)");
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Pizzas");
+                });
+
+            modelBuilder.Entity("PizzeriaDiAnaJaparidze.Models.Pizza", b =>
+                {
+                    b.HasOne("PizzeriaDiAnaJaparidze.Models.Category", "Category")
+                        .WithMany("Pizzas")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("PizzeriaDiAnaJaparidze.Models.Category", b =>
+                {
+                    b.Navigation("Pizzas");
                 });
 #pragma warning restore 612, 618
         }

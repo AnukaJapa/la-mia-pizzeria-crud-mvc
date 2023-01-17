@@ -11,8 +11,8 @@ using PizzeriaDiAnaJaparidze.Database;
 namespace PizzeriaDiAnaJaparidze.Migrations
 {
     [DbContext(typeof(PizzeriaContext))]
-    [Migration("20230117130715_aggiuntoCATEGory")]
-    partial class aggiuntoCATEGory
+    [Migration("20230117164111_aggiuntoDatanellaCategoryTable")]
+    partial class aggiuntoDatanellaCategoryTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

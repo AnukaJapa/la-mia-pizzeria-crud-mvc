@@ -12,7 +12,7 @@ namespace PizzeriaDiAnaJaparidze.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=localhost;Database=PizzeriaAnaDB;" +
+            optionsBuilder.UseSqlServer("Data Source=localhost;Database=PizzeriaAnaDB1;" +
             "Integrated Security=True;TrustServerCertificate=True");
         }
     }

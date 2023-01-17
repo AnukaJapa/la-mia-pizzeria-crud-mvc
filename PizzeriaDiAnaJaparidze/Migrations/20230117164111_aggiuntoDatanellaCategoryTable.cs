@@ -5,7 +5,7 @@
 namespace PizzeriaDiAnaJaparidze.Migrations
 {
     /// <inheritdoc />
-    public partial class aggiuntoCATEGory : Migration
+    public partial class aggiuntoDatanellaCategoryTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
